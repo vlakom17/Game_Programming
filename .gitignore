@@ -5,7 +5,7 @@ Build/
 Builds/
 UserSettings/
 obj/
-
+.vs/
 .vscode/
 *.csproj
 *.sln

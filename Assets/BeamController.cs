@@ -36,7 +36,7 @@ public class BeamController : MonoBehaviour
 
     private Renderer highlightedRenderer;
     private Color originalColor;
-    
+    bool isMissionComplete = false;
     void Start()
     {
         lr = GetComponent<LineRenderer>();
@@ -183,22 +183,43 @@ public class BeamController : MonoBehaviour
         if (!hasHit || hit.collider == null)
         return false;
 
+        bool isTrophy = hit.collider.CompareTag("Trophy");
+
+        if (isTrophy && !isPull)
+        {
+            return false;
+        }
+
         Rigidbody rb = hit.collider.GetComponentInParent<Rigidbody>();
-        Debug.Log(rb);
-        if (rb == null) return false; // пол игнорируется
+        if (rb == null) return false;
+        Vector3 targetPoint = transform.position;
+
+        targetPoint.y = rb.position.y;
 
         Vector3 dir;
-        Vector3 targetPoint = transform.position + transform.forward * 2f;
-        if (isPull){
-            dir = (targetPoint - rb.position).normalized;
+
+        if (isPull)
+        {
+            dir = (targetPoint - rb.position);
         }
         else
-            dir = (rb.position - targetPoint).normalized;
+        {
+            dir = (rb.position - targetPoint);
+        }
 
-        float finalForce = currentForce / rb.mass;
+        dir.y = 0;
 
+        dir.Normalize();
+
+        float finalForce = currentForce;
         rb.AddForce(dir * finalForce, ForceMode.Force);
+        if (isTrophy && isPull && !isMissionComplete)
+        {
+            isMissionComplete = true;
 
+            Debug.Log("MISSION COMPLETE");
+            Time.timeScale = 0f;
+        }
         Vector3 start = transform.position + Vector3.up * 1.2f;
         Vector3 end = hit.point;
 
@@ -216,7 +237,14 @@ public class BeamController : MonoBehaviour
 
         lr.startColor = color;
         lr.endColor = color;
+        if (isPull && (hit.collider.CompareTag("KeyRed") || hit.collider.CompareTag("KeyBlue")))
+        {
+            Debug.Log("KEY PICKED");
 
+            GameManager.Instance.AddKey();
+
+            Destroy(hit.collider.gameObject);
+        }
         beamTimer = beamVisibleTime;
         return true;
     }
