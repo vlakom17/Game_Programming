@@ -37,9 +37,15 @@ public class BeamController : MonoBehaviour
     private Renderer highlightedRenderer;
     private Color originalColor;
     bool isMissionComplete = false;
+
+    public AudioSource audioSource;
+    public AudioClip pullSound;
+    public AudioClip pushSound;
+
     void Start()
     {
         lr = GetComponent<LineRenderer>();
+        audioSource = GetComponent<AudioSource>();
         pullBar.SetActive(false);
         pushBar.SetActive(false);
         if (lr == null)
@@ -54,6 +60,9 @@ public class BeamController : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.gameFinished)
+            return;
+
         if (lr == null) return;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -213,12 +222,21 @@ public class BeamController : MonoBehaviour
 
         float finalForce = currentForce;
         rb.AddForce(dir * finalForce, ForceMode.Force);
+        if (!audioSource.isPlaying)
+        {
+            if (isPull)
+            {
+                audioSource.PlayOneShot(pullSound);
+            }
+            else
+            {
+                audioSource.PlayOneShot(pushSound);
+            }   
+        }
         if (isTrophy && isPull && !isMissionComplete)
         {
             isMissionComplete = true;
-
-            Debug.Log("MISSION COMPLETE");
-            Time.timeScale = 0f;
+            GameManager.Instance.CompleteMission();
         }
         Vector3 start = transform.position + Vector3.up * 1.2f;
         Vector3 end = hit.point;
