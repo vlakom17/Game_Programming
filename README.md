@@ -71,4 +71,4 @@
 
 Сцена в самом начале уровня представлена на указанном ниже кадре:
 
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/1d0378b9-7fd2-4272-82a5-e2ff1f1bc174" />
+<img width="1920" height="1067" alt="image" src="https://github.com/user-attachments/assets/a698799a-ffed-45c8-bf3c-093c55cbf8c3" />
