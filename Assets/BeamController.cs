@@ -9,10 +9,10 @@ public class BeamController : MonoBehaviour
     public float maxForce = 100f;
     public float chargeSpeed = 40f;
 
-    public float maxPullEnergy = 300f;
+    public float maxPullEnergy = 500f;
     public float currentPullEnergy = 300f;
 
-    public float maxPushEnergy = 300f;
+    public float maxPushEnergy = 500f;
     public float currentPushEnergy = 300f;
 
     public float pullDrain = 20f;

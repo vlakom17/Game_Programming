@@ -8,16 +8,20 @@ public class Door : MonoBehaviour
 
     private bool isOpening = false;
     private Vector3 targetPos;
+    public AudioSource audioSource;
+    public AudioClip openSound;
 
     void Start()
     {
         targetPos = transform.position + Vector3.up * openHeight;
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
     {
         if (!isOpening && GameManager.Instance.keysCollected >= requiredKeys)
         {
+            audioSource.PlayOneShot(openSound);
             Debug.Log("DOOR OPEN");
             isOpening = true;
         }
